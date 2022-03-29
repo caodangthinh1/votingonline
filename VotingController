@@ -1,0 +1,56 @@
+package com.example;
+
+import org.springframework.ui.ModelMap;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.List;
+
+@Controller
+@RequestMapping("/")
+public class VotingController {
+
+    @GetMapping("")
+    public String showForm(HttpServletRequest request, ModelMap model){
+        return "voting-form";
+    }
+
+    @PostMapping()
+    public  String showInfo(HttpServletRequest request, ModelMap model){
+
+        String question = request.getParameter("question");
+        String answer1 = request.getParameter("answer1");
+        String answer2 = request.getParameter("answer2");
+        String answer3 = request.getParameter("answer3");
+
+        model.addAttribute("question", question);
+        model.addAttribute("answer1", answer1);
+        model.addAttribute("answer2", answer2);
+        model.addAttribute("answer3", answer3);
+        ArrayList<Vote> answers = new ArrayList<>() {{
+            add(new Vote(1, answer1));
+            add(new Vote(2, answer2));
+            add(new Vote(3, answer3));
+        }};
+        model.addAttribute("answers", answers);
+        return "voting-info";
+    }
+
+    @PostMapping("/vote")
+
+    ///
+    public  String showVotingResult(HttpServletRequest request, ModelMap model){
+        int percentage = 100;
+
+        model.addAttribute("percent", percentage);
+        String voted = request.getParameter("vote");
+
+        return "voting-result";
+    }
+
+
+}
